@@ -1,0 +1,247 @@
+<main>
+  <!-- Card container that binds all together. -->
+  <mat-card
+    class="mat-elevation-z24"
+    fxFlex="50"
+    fxFlex.md="80"
+    fxFlex.lt-md="90"
+    fxFlexOffset="25"
+    fxFlexOffset.md="10"
+    fxFlexOffset.lt-md="5"
+    role="region"
+  >
+    <!-- Title of the card. -->
+    <mat-card-title
+      aria-label="This is a register page to register you in our application."
+      aria-level="1"
+      role="heading"
+      title="Contact"
+      >Register</mat-card-title
+    >
+    <!--/ Title of the card. -->
+    <!-- Content of the card. -->
+    <mat-card-content>
+      <!-- Form. -->
+      <form
+        [formGroup]="contactForm"
+        (ngSubmit)="onSubmit(formDirective)"
+        fxLayout="column"
+        fxLayoutAlign="space-between stretch"
+        fxLayoutGap="20px"
+        #formDirective="ngForm"
+      >
+        <!-- First name input field. -->
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="formControlFirstName"
+            name="formControlFirstName"
+            required
+            aria-label="Here write your first name."
+            placeholder="Your first name"
+            title="Your first name"
+            type="text"
+          />
+          <mat-hint>Write your first name.</mat-hint>
+          <!-- Error handling. -->
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlFirstName')!.hasError('maxlength')
+            "
+          >
+            First name is <strong>above 64 characters</strong> and looks fake.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlFirstName')!.hasError('minlength')
+            "
+          >
+            First name is <strong>below 2 characters</strong> and looks fake.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlFirstName')!.hasError('required')
+            "
+          >
+            First name is <strong>required</strong>.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlFirstName')!.hasError('pattern')"
+          >
+            Please use only <strong>letters</strong>.
+          </mat-error>
+          <!--/ Error handling. -->
+        </mat-form-field>
+        <!--/ First name input field. -->
+        <!-- Last name input field. -->
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="formControlLastName"
+            name="formControlLastName"
+            required
+            aria-label="Here write your last name."
+            placeholder="Your last name"
+            title="Your last name"
+            type="text"
+          />
+          <mat-hint>Write your last name.</mat-hint>
+          <!-- Error handling. -->
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlLastName')!.hasError('maxlength')
+            "
+          >
+            Last name is <strong>above 64 characters</strong> and looks fake.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlLastName')!.hasError('minlength')
+            "
+          >
+            Last name is <strong>below 2 characters</strong> and looks fake.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlLastName')!.hasError('required')"
+          >
+            Last name is <strong>required</strong>.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlLastName')!.hasError('pattern')"
+          >
+            Please use only <strong>letters</strong>.
+          </mat-error>
+          <!--/ Error handling. -->
+        </mat-form-field>
+        <!--/ Last name input field. -->
+        <!-- Email input field. -->
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="formControlEmail"
+            name="formControlEmail"
+            required
+            aria-label="Here provide your valid email address."
+            placeholder="Your email"
+            title="Your email"
+            type="email"
+          />
+          <mat-hint>Provide valid email address.</mat-hint>
+          <!-- Error handling. -->
+          <mat-error
+            *ngIf="contactForm.get('formControlEmail')!.hasError('email')"
+          >
+            This is an <strong>invalid</strong> email address.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlEmail')!.hasError('maxlength')"
+          >
+            Email is <strong>above 64 characters</strong> and looks fake.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlEmail')!.hasError('minlength')"
+          >
+            Email should have <strong>at least 6 characters</strong>.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlEmail')!.hasError('required')"
+          >
+            Email is <strong>required</strong>.
+          </mat-error>
+          <!--/ Error handling. -->
+        </mat-form-field>
+        <!--/ Email input field. -->
+        <!-- Password input field. -->
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="formControlPassword"
+            name="formControlPassword"
+            required
+            aria-label="Here write your password."
+            placeholder="Your password"
+            title="Your password"
+            type="password"
+          />
+          <mat-hint>Write your password.</mat-hint>
+          <!-- Error handling. -->
+          <mat-error
+            *ngIf="
+              contactForm
+                .get('formControlPassword')!
+                .hasError('namesInPassword')
+            "
+          >
+            Password
+            <strong>cannot</strong>
+            contain your first or last name.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlPassword')!.hasError('maxlength')
+            "
+          >
+            Password <strong>above 64 characters</strong> it too difficult to
+            remember.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              contactForm.get('formControlPassword')!.hasError('minlength')
+            "
+          >
+            Password <strong>below 8 characters</strong> is unsafe.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlPassword')!.hasError('required')"
+          >
+            Password is <strong>required</strong>.
+          </mat-error>
+          <mat-error
+            *ngIf="contactForm.get('formControlPassword')!.hasError('pattern')"
+          >
+            Password should have between <strong>8 and 64 letters</strong>,
+            contain <strong>at least 1 lower case letter</strong> and
+            <strong>at least 1 upper case letter</strong>.
+          </mat-error>
+          <!--/ Error handling. -->
+        </mat-form-field>
+        <!--/ Password input field. -->
+        <!-- Confirm password input field. -->
+        <mat-form-field>
+          <input
+            matInput
+            formControlName="formControlConfirmPassword"
+            name="formControlConfirmPassword"
+            required
+            aria-label="Here confirm your password."
+            placeholder="Confirm your password"
+            title="Confirm your password"
+            type="password"
+          />
+          <mat-hint>Confirm your password.</mat-hint>
+          <!-- Error handling. -->
+          <mat-error
+            *ngIf="!contactForm.get('formControlConfirmPassword')!.valid"
+          >
+            Password confirmation <strong>must match password</strong>.
+          </mat-error>
+          <!--/ Error handling. -->
+        </mat-form-field>
+        <!--/ Confirm password input field. -->
+        <button
+          mat-raised-button
+          matTooltip="Register"
+          name="formControlButton"
+          color="primary"
+          [disabled]="!contactForm.valid"
+          aria-label="Click here to register."
+        >
+          Register
+        </button>
+      </form>
+      <!--/ Form. -->
+    </mat-card-content>
+    <!--/ Content of the card. -->
+  </mat-card>
+  <!--/ Card container that binds all together. -->
+</main>

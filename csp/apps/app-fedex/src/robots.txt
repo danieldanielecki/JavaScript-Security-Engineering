@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+Sitemap: https://fedex-production.firebaseapp.com/sitemap.xml
+Host: https://fedex-production.firebaseapp.com

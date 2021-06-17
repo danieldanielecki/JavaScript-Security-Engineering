@@ -1,0 +1,39 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "@fedex-test/home": ["libs/home/src/index.ts"],
+      "@fedex-test/core": ["libs/core/src/index.ts"],
+      "@fedex-test/shared": ["libs/shared/src/index.ts"]
+    }
+  },
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": false,
+    "enableI18nLegacyMessageIdFormat": false,
+    "enableLegacyTemplate": false,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictMetadataEmit": true
+  },
+  "exclude": ["node_modules", "tmp"]
+}

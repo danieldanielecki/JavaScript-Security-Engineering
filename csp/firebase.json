@@ -1,0 +1,29 @@
+{
+  "hosting": [
+    {
+      "target": "app-fedex",
+      "public": "functions/dist/app-fedex/functions/dist/app-fedex/browser",
+      "ignore": ["**/.*"],
+      "headers": [
+        {
+          "source": "*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].+(css|js)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public,max-age=31536000,immutable"
+            }
+          ]
+        }
+      ],
+      "rewrites": [
+        {
+          "function": "ssr",
+          "source": "**"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "source": "functions/dist/app-fedex"
+  }
+}

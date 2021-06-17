@@ -1,0 +1,6 @@
+# Add files here to ignore them from prettier formatting
+
+/dist
+/coverage
+# Exclude Cypress source which causes to fail this job on CI.
+/cache/Cypress

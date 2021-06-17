@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "app-fedex",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "app-fedex": {
+      "projectType": "application",
+      "root": "apps/app-fedex",
+      "sourceRoot": "apps/app-fedex/src",
+      "prefix": "fedex-test",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+              "path": "./webpack.custom.config.js"
+            },
+            "outputPath": "functions/dist/app-fedex/browser",
+            "index": "apps/app-fedex/src/index.html",
+            "main": "apps/app-fedex/src/main.ts",
+            "polyfills": "apps/app-fedex/src/polyfills.ts",
+            "tsConfig": "apps/app-fedex/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/app-fedex/src/favicon.ico",
+              "apps/app-fedex/src/assets",
+              "apps/app-fedex/src/manifest.webmanifest",
+              "apps/app-fedex/src/robots.txt",
+              "apps/app-fedex/src/sitemap.xml"
+            ],
+            "styles": [
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/app-fedex/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/app-fedex/src/environments/environment.ts",
+                  "with": "apps/app-fedex/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "apps/app-fedex/ngsw-config.json"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "app-fedex:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "app-fedex:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "app-fedex:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/app-fedex/src/**/*.ts",
+              "apps/app-fedex/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/app-fedex"],
+          "options": {
+            "jestConfig": "apps/app-fedex/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "functions/dist/app-fedex/server",
+            "main": "apps/app-fedex/server.ts",
+            "tsConfig": "apps/app-fedex/tsconfig.server.json",
+            "externalDependencies": [
+              "firebase",
+              "@firebase/app",
+              "@firebase/analytics",
+              "@firebase/auth",
+              "@firebase/component",
+              "@firebase/database",
+              "@firebase/firestore",
+              "@firebase/functions",
+              "@firebase/installations",
+              "@firebase/messaging",
+              "@firebase/storage",
+              "@firebase/performance",
+              "@firebase/remote-config",
+              "@firebase/util"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "apps/app-fedex/src/environments/environment.ts",
+                  "with": "apps/app-fedex/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "app-fedex:build",
+            "serverTarget": "app-fedex:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "app-fedex:build:production",
+              "serverTarget": "app-fedex:server:production"
+            }
+          }
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "browserTarget": "app-fedex:build:production",
+            "serverTarget": "app-fedex:server:production",
+            "routes": ["/"]
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "ssr": true
+          }
+        }
+      }
+    },
+    "app-fedex-e2e": {
+      "root": "apps/app-fedex-e2e",
+      "sourceRoot": "apps/app-fedex-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/app-fedex-e2e/cypress.json",
+            "tsConfig": "apps/app-fedex-e2e/tsconfig.e2e.json",
+            "devServerTarget": "app-fedex:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "app-fedex:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/app-fedex-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "home": {
+      "projectType": "library",
+      "root": "libs/home",
+      "sourceRoot": "libs/home/src",
+      "prefix": "fedex-test",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/home/src/**/*.ts",
+              "libs/home/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/home"],
+          "options": {
+            "jestConfig": "libs/home/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "core": {
+      "projectType": "library",
+      "root": "libs/core",
+      "sourceRoot": "libs/core/src",
+      "prefix": "fedex-test",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/core/src/**/*.ts",
+              "libs/core/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/core"],
+          "options": {
+            "jestConfig": "libs/core/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared": {
+      "projectType": "library",
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "prefix": "fedex-test",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/shared/src/**/*.ts",
+              "libs/shared/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared"],
+          "options": {
+            "jestConfig": "libs/shared/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  }
+}

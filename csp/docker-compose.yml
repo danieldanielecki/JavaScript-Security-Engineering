@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  node:
+    build: .
+    environment:
+      - NODE_ENV=development # All npm dependencies.
+      #- NODE_ENV=production # npm dependencies without devDependencies.
+    image: 'fedex-test'
+    ports:
+      - '4200:4200' # For localhost.
+      - '49153:49153' # For webpack.
+    volumes:
+      - .:/home/node
+      - /home/node/node_modules

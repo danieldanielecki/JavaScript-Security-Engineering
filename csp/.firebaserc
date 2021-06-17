@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "fedex-production": {
+      "hosting": {
+        "app-fedex": [
+          "fedex-production"
+        ]
+      }
+    }
+  }
+}

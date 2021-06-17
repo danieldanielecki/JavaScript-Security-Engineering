@@ -1,0 +1,139 @@
+image: node:12 # Has to be used instead of "14"/"latest" until PR #175 (https://github.com/IBM/audit-ci/pull/175) won't be accepted, see details: https://github.com/IBM/audit-ci/issues/176#issuecomment-799400131.
+
+variables:
+  npm_config_cache: '$CI_PROJECT_DIR/.npm'
+  CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/cache/Cypress'
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules/
+
+before_script:
+  - npm ci
+
+stages:
+  - build
+  - test
+  - staging
+  - security staging
+  - production
+  - security production
+
+Build:
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - functions/dist/app-fedex
+    when: always
+  script:
+    - npm run build:ssr
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/ # Add into commit "skip-ci" and it won't run job.
+  stage: build
+
+Vulnerabilities:
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/ # Add into commit "skip-ci" and it won't run job.
+  stage: test
+  script:
+    - npx audit-ci # Don't prevent any vulnerabilities due to requirements for Cloud Functions for Firebase to work properly with specific versions of its packages.
+
+Quality:
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/ # Add into commit "skip-ci" and it won't run this job.
+  stage: test
+  script:
+    - npm run format:write
+    - npm run format:check
+
+SAST:
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/ # Add into commit "skip-ci" and it won't run this job.
+  script:
+    - npm run lint
+  stage: test
+
+Unit:
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/ # Add into commit "skip-ci" and it won't run this job.
+  script:
+    - npm run test
+  stage: test
+
+E2E:
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - dist/out-tsc/apps/app-fedex-e2e/**/*.mp4
+      - dist/out-tsc/apps/app-fedex-e2e/**/*.png
+    when: always
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/
+  image: cypress/browsers:node12.14.1-chrome85-ff81
+  script:
+    - npm run e2e
+  stage: test
+
+Staging:
+  dependencies:
+    - Build
+  environment:
+    name: development
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/
+  only:
+    - develop # Corresponding only to the development branch.
+  script:
+    - npm run deploy:ssr
+  stage: staging
+
+Security Headers Staging:
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/ # Add into commit "skip-ci" and it won't run job.
+  only:
+    - develop # Corresponding only to the development branch.
+  script:
+    - npm install -g observatory-cli
+    - observatory fedex-staging.firebaseapp.com --format report --zero
+    #- observatory fedex-staging.firebaseapp.com --min-score 100 # Ideally, I'd need 2 days more to make it. SSR is required to set up security headers, however due to Angular's Universal 'inlineStyling' will cause one of the security issues.
+  stage: security staging
+
+Production:
+  dependencies:
+    - Build
+  environment:
+    name: production
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/
+  only:
+    - master # Corresponding only to the master branch.
+  script:
+    - npm run deploy:ssr
+  stage: production
+  when: manual # It'll be run only if will be manually accepted in the CI.
+
+Security Headers Production:
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-ci/
+  only:
+    - master # Corresponding only to the master branch.
+  script:
+    - npm install -g observatory-cli
+    - observatory fedex-production.firebaseapp.com --format report --zero
+    #- observatory fedex-production.firebaseapp.com --min-score 100 # Ideally, I'd need 2 days more to make it. SSR is required to set up security headers, however due to Angular's Universal 'inlineStyling' will cause one of the security issues.
+  stage: security production
+  when: manual # Security Headers can be check once again manually once deployment to production will be done.
+

@@ -80,7 +80,7 @@
     "@nrwl/eslint-plugin-nx": "11.5.2",
     "@nrwl/jest": "11.5.2",
     "@nrwl/linter": "11.5.2",
-    "@nrwl/nx-cloud": "latest",
+    "@nrwl/nx-cloud": "12.2.7",
     "@nrwl/tao": "11.5.2",
     "@nrwl/workspace": "11.5.2",
     "@types/express": "^4.17.0",
